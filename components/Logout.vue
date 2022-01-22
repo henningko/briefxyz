@@ -1,11 +1,14 @@
 <template>
-  <button
-    class="button block p-2 bg-gray-200 hover:bg-gray-300"
-    @click="signOut"
-    :disabled="loading"
-  >
-    Log out
-  </button>
+  <div class="absolute top-8 right-8">
+    <!-- <span> {{ auth.user.email }} </span> -->
+    <button
+      class="button block p-2 bg-white border border-black hover:bg-gray-300 dark:border-white dark:bg-black dark:text-white"
+      @click="signOut"
+      :disabled="loading"
+    >
+      Sign Out
+    </button>
+  </div>
 </template>
 
 <script>
@@ -15,6 +18,7 @@ export default {
   setup() {
     const { $supabase } = useNuxtApp();
     const loading = ref(false);
+    const auth = useAuth();
 
     // why not...
     async function signOut() {
@@ -24,13 +28,13 @@ export default {
       } catch (error) {
         alert(error.error_description || error.message);
       } finally {
-        console.log("success");
         loading.value = false;
       }
     }
 
     return {
       loading,
+      auth,
       signOut,
     };
   },

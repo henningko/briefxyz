@@ -1,40 +1,25 @@
 <template>
-  <div class="w-full min-h-screen bg-white dark:bg-black p-8">
-    <h1 class="text-7xl font-bold dark:text-white">Brief.</h1>
-    <!-- <NuxtPage /> -->
-    <Logout v-if="stateStore.user" />
+  <div class="w-full min-h-screen bg-white dark:bg-black dark:text-white p-8">
+    <div v-if="auth.user">
+      <Logout />
+      <h1 class="text-7xl font-bold mb-8">Brief.</h1>
+      <Content />
+    </div>
     <Auth v-else />
   </div>
 </template>
-<script>
-import Auth from "./components/Auth.vue";
-import Logout from "./components/Logout.vue";
+<script setup lang="ts">
+const { $supabase } = useNuxtApp();
+const loading = ref(false);
+const auth = useAuth();
 
-export default {
-  components: {
-    Auth,
-    Logout,
-  },
-
-  setup() {
-    const { $supabase } = useNuxtApp();
-    const loading = ref(false);
-
-    // stateStore requires a function
-    const stateStore = useState("stateStore", () => ({}));
-    stateStore.value.user = $supabase.auth.user();
-    $supabase.auth.onAuthStateChange((event, session) => {
-      // Without this, an error was caused because session was null
-      if (event === "SIGNED_IN") {
-        stateStore.value.user = session.user;
-      } else {
-        stateStore.value.user = null;
-      }
-    });
-
-    return {
-      stateStore,
-    };
-  },
-};
+auth.value.user = $supabase.auth.user();
+$supabase.auth.onAuthStateChange((event, session) => {
+  // Without this, an error was caused because session was null
+  if (event === "SIGNED_IN") {
+    auth.value.user = session.user;
+  } else {
+    auth.value.user = null;
+  }
+});
 </script>
