@@ -6,8 +6,8 @@
         v-if="content.type === 'blurb'"
       >
         <section>
-          <h1 class="text-4xl mb-16">{{ content.title }}</h1>
-          {{ content.data }}
+          <h1 class="text-4xl">{{ content.title }}</h1>
+          <span v-html="$markdown.render(content.data)"></span>
         </section>
       </li>
       <li
@@ -17,15 +17,16 @@
         <article
           class="col-span-3 lg:grid lg:grid-cols-3 grid-flow-row-dense gap-x-16"
         >
-          <h1 class="text-4xl mb-16 col-span-3">
+          <h1 class="text-4xl col-span-3">
             {{ content.title }}
           </h1>
           <aside class="col-start-3 text-gray-500 text-sm">
             {{ content.target_url }}
           </aside>
-          <main class="col-span-2">
-            {{ content.data.body }}
-          </main>
+          <main
+            class="col-span-2"
+            v-html="$markdown.render(content.data)"
+          ></main>
         </article>
       </li>
     </template>
@@ -33,7 +34,8 @@
 </template>
 
 <script setup lang="ts">
-const { $supabase } = useNuxtApp();
+const { $supabase, $$markdown } = useNuxtApp();
+// const { $markdown } = useNuxtApp();s
 const { data } = await $supabase
   .from("user_content")
   .select("title, data, type, target_url")
