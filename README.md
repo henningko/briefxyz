@@ -2,6 +2,12 @@
 
 We recommend to look at the [documentation](https://v3.nuxtjs.org).
 
+## Packages included
+
+- Supabase
+- Markdown-it
+- WindiCSS
+
 ## Setup
 
 Make sure to install the dependencies
