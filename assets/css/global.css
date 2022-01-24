@@ -1,8 +1,26 @@
 /* Global styles */
 a {
-  @apply text-black dark:text-white decoration-gray-400 underline-offset-2;
+  @apply text-black dark:text-white decoration-cool-gray-400 underline-offset-2;
+}
+article p {
+  /* margin-top: 1rem; */
+  @apply lg:pr-4 mb-2
+  margin-bottom: 2rem;
+  /* padding-right: 4rem; */
+}
+img {
+  max-width: 100%;
 }
 
+blockquote {
+  margin: 0;
+  @apply p-4 md:p-8 border-l-1 border-l-cool-gray-400 bg-cool-gray-100 dark:bg-cool-gray-800;
+}
+
+html,
+body {
+  @apply bg-white dark:bg-black;
+}
 /*  Gridlover */
 /* https://www.gridlover.net/try */
 html,

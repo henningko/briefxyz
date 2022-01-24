@@ -53,6 +53,9 @@ article p {
   margin-bottom: 2rem;
   padding-right: 4rem;
 }
+article img {
+  max-width: 100%;
+}
 article aside {
   /* margin-top: 1rem; */
   margin-bottom: 4rem;
