@@ -1,4 +1,4 @@
-/* v-html does net get scoped styles applied to it */
+/* Global styles */
 a {
   @apply text-black dark:text-white decoration-gray-400 underline-offset-2;
 }

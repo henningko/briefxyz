@@ -8,6 +8,7 @@ export default defineNuxtPlugin(() => {
         html: true,
         linkify: false,
         typographer: true,
+        breaks: true,
       }),
     },
   };
