@@ -2,14 +2,14 @@
   <form class="row flex flex-center" @submit.prevent="handleLogin">
     <div class="col-6 form-widget">
       <input
-        class="inputField border mt-4 mb-4 p-2 block"
+        class="inputField border mt-4 mb-4 p-2 block dark:bg-black dark:text-white dark:border dark:border-white"
         type="email"
         placeholder="Your email"
         v-model="email"
       />
 
       <input
-        class="inputField border mt-4 mb-4 p-2 block"
+        class="inputField border mt-4 mb-4 p-2 block dark:bg-black dark:text-white dark:border dark:border-white"
         type="password"
         placeholder="Your password"
         v-model="password"
@@ -17,7 +17,7 @@
 
       <input
         type="submit"
-        class="button block p-2"
+        class="button block p-2 dark:bg-black dark:text-white dark:border dark:border-white dark:hover:bg-cool-gray-800"
         :value="loading ? 'Loading' : 'Login'"
         :disabled="loading"
       />

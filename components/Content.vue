@@ -39,6 +39,7 @@ const { $supabase, $$markdown } = useNuxtApp();
 const { data } = await $supabase
   .from("user_content")
   .select("title, data, type, target_url")
+  .gt("inserted_at", new Date(Date.now() - 86400000).toISOString()) // Only past 24 hours
   .order("type", { ascending: false });
 </script>
 
@@ -48,14 +49,7 @@ article h1 {
   font-style: italic;
   /* text-transform: capitalize; */
 }
-article p {
-  /* margin-top: 1rem; */
-  margin-bottom: 2rem;
-  padding-right: 4rem;
-}
-article img {
-  max-width: 100%;
-}
+
 article aside {
   /* margin-top: 1rem; */
   margin-bottom: 4rem;

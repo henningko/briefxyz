@@ -2,7 +2,7 @@
   <div class="absolute top-8 right-8">
     <!-- <span> {{ auth.user.email }} </span> -->
     <button
-      class="button block p-2 bg-white border border-black hover:bg-gray-300 dark:border-white dark:bg-black dark:text-white"
+      class="button block p-1 bg-white border border-black hover:bg-cool-gray-400 dark:border-white dark:bg-black dark:text-white"
       @click="signOut"
       :disabled="loading"
     >
