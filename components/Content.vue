@@ -21,7 +21,7 @@
             {{ content.title }}
           </h1>
           <aside class="col-start-3 text-gray-500 text-sm">
-            <a href="{{ content.target_url }}">{{ content.target_url }}</a>
+            <a :href="content.target_url">{{ content.target_url }}</a>
           </aside>
           <main
             class="col-span-2"
