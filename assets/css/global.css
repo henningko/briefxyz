@@ -7,6 +7,7 @@ article p {
   @apply lg:pr-4 mb-2
   margin-bottom: 2rem;
   /* padding-right: 4rem; */
+  max-width: 36rem;
 }
 img {
   max-width: 100%;
