@@ -1,6 +1,6 @@
 /* Global styles */
 a {
-  @apply text-black dark:text-white decoration-cool-gray-400 underline-offset-2;
+  @apply text-black dark:text-white decoration-cool-gray-400 underline underline-offset-2;
 }
 article p {
   /* margin-top: 1rem; */

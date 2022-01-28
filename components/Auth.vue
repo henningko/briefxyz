@@ -17,10 +17,11 @@
 
       <input
         type="submit"
-        class="button block p-2 dark:bg-black dark:text-white dark:border dark:border-white dark:hover:bg-cool-gray-800"
+        class="button inline p-2 mr-2 dark:bg-black dark:text-white dark:border dark:border-white dark:hover:bg-cool-gray-800"
         :value="loading ? 'Loading' : 'Login'"
         :disabled="loading"
       />
+      <NuxtLink class="inline" to="/register">Register</NuxtLink>
     </div>
   </form>
 </template>
