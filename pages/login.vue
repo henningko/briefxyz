@@ -26,39 +26,27 @@
   </form>
 </template>
 
-<script>
-import { ref } from "vue";
+<script setup>
+const { $supabase } = useNuxtApp();
+const router = useRouter();
+const loading = ref(false);
+const email = ref("");
+const password = ref("");
+const signedUp = ref(false);
 
-export default {
-  setup() {
-    const router = useRouter();
-    const { $supabase } = useNuxtApp();
-    const loading = ref(false);
-    const email = ref("");
-    const password = ref("");
-
-    const handleLogin = async () => {
-      try {
-        loading.value = true;
-        const { error, session, user } = await $supabase.auth.signIn({
-          email: email.value,
-          password: password.value,
-        });
-        if (error) throw error;
-      } catch (error) {
-        alert(error.error_description || error.message);
-      } finally {
-        loading.value = false;
-        router.replace("/");
-      }
-    };
-
-    return {
-      loading,
-      email,
-      password,
-      handleLogin,
-    };
-  },
+const handleLogin = async () => {
+  try {
+    loading.value = true;
+    const { error } = await $supabase.auth.signIn({
+      email: email.value,
+      password: password.value,
+    });
+    if (error) throw error;
+  } catch (error) {
+    alert(error.error_description || error.message);
+  } finally {
+    loading.value = false;
+    router.push("/");
+  }
 };
 </script>

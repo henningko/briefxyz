@@ -47,6 +47,10 @@ const handleSignup = async () => {
       email: email.value,
       password: password.value,
     });
+    await $fetch("api/auth", {
+      method: "POST",
+      body: { event, session },
+    });
     if (error) throw error;
   } catch (error) {
     alert(error.error_description || error.message);
