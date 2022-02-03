@@ -2,22 +2,19 @@
 import config from "#config";
 import mdit from "markdown-it";
 import type { IncomingMessage, ServerResponse } from "http";
-import { createClient } from "@supabase/supabase-js";
+// import { createClient } from "@supabase/supabase-js";
+import supabase from "../lib/supabase";
 import { useCookie } from "h3";
 
-const supabase = createClient(config.supabaseUrl, config.supabaseKey);
+// const supabase = createClient(config.supabaseUrl, config.supabaseKey);
 const markdown = new mdit({
   html: true,
   linkify: false,
   typographer: true,
   breaks: true,
-  lists: true,
 });
 export default async (req: IncomingMessage, res: ServerResponse) => {
-  // https://supabase.com/docs/reference/javascript/auth-setauth
-  const { user } = supabase.auth.setAuth(useCookie(req, "sb:token"));
   try {
-    // const { user } = await supabase.auth.api.getUserByCookie(req);
     const { data } = await supabase
       .from("user_content")
       .select("title, data, type, target_url")

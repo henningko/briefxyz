@@ -1,11 +1,10 @@
 // allows access to runtime config
 import type { IncomingMessage, ServerResponse } from "http";
 import config from "#config";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../lib/supabase";
 import { useCookie, useBody } from "h3";
 
 // https://egghead.io/lessons/supabase-pass-supabase-session-cookie-to-api-route-to-identify-user
-const supabase = createClient(config.supabaseUrl, config.supabaseKey);
 
 export default async (req: IncomingMessage, res: ServerResponse) => {
   let auth: boolean = false;
