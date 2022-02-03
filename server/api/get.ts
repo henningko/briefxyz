@@ -11,6 +11,7 @@ const markdown = new mdit({
   linkify: false,
   typographer: true,
   breaks: true,
+  lists: true,
 });
 export default async (req: IncomingMessage, res: ServerResponse) => {
   // https://supabase.com/docs/reference/javascript/auth-setauth
@@ -31,6 +32,6 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     // return markdown.render(data[1].data);
     return dataMarkdown;
   } catch (error) {
-    console.log(error);
+    console.log(`this is from get ${error}`);
   }
 };

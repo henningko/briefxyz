@@ -1,7 +1,6 @@
 <template>
   <div class="w-full min-h-screen bg-white dark:bg-black dark:text-white p-8">
-    {{ auth }}
-    <div v-if="auth.user">
+    <div v-if="isAuthenticated()">
       <Logout />
       <h1 class="text-7xl font-bold mb-8">Brief.</h1>
       <Content />
@@ -12,5 +11,5 @@
 <script setup lang="ts">
 const { $supabase } = useNuxtApp();
 const loading = ref(false);
-const auth = useAuth();
+const { isAuthenticated } = await useAuth();
 </script>

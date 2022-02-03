@@ -2,11 +2,13 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import config from "#config";
 import { createClient } from "@supabase/supabase-js";
-import { useCookies, useBody } from "h3";
+import { useCookie, useBody } from "h3";
 
 // https://egghead.io/lessons/supabase-pass-supabase-session-cookie-to-api-route-to-identify-user
 const supabase = createClient(config.supabaseUrl, config.supabaseKey);
+
 export default async (req: IncomingMessage, res: ServerResponse) => {
+  let auth: boolean = false;
   // const cookies = useCookies(req);
   // @ts-expect-error: Missing properties in h3
   req.body = await useBody(req);
@@ -14,13 +16,19 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
   // @ts-expect-error: Missing properties in h3
   res.status = (p) => ({ json: (p) => ({}) });
   // sets Cookie when this is called with POST
-  const user = await supabase.auth.api.setAuthCookie(req, res);
+  // try {
+  // SSR causes this to report a missing Auth session
+  supabase.auth.api.setAuthCookie(req, res);
+  // @ts-expect-error: Missing properties in h3
+  if (req.body?.session) {
+    auth = true;
+  }
   // @ts-expect-error: Missing properties in h3
   delete req.body;
   // @ts-expect-error: Missing properties in h3
   delete res.status;
-
+  //TODO be more explicit about setting/unsetting cookie
   return {
-    updated: true,
+    auth,
   };
 };
