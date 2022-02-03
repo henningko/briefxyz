@@ -5,15 +5,23 @@
 import "./assets/css/global.css";
 const { $supabase } = useNuxtApp();
 const loading = ref(false);
-const auth = useAuth();
+const { userSession, userCookieSet, isAuthenticated } = await useAuth();
 
-auth.value.user = $supabase.auth.user();
-$supabase.auth.onAuthStateChange((event, session) => {
+// Initial setup
+userSession.value = await $supabase.auth.session();
+if (userSession.value) {
+  ({ auth: userCookieSet.value } = await $fetch("api/auth", {
+    method: "POST",
+    body: { session: userSession.value, event: "TOKEN_REFRESHED" },
+  }));
+}
+$supabase.auth.onAuthStateChange(async (event, session) => {
   // Without this, an error was caused because session was null
-  if (event === "SIGNED_IN") {
-    auth.value.user = session.user;
-  } else {
-    auth.value.user = null;
-  }
+  userSession.value = session;
+  // Cookie will get updated by api/auth
+  ({ auth: userCookieSet.value } = await $fetch("api/auth", {
+    method: "POST",
+    body: { event, session },
+  }));
 });
 </script>

@@ -31,6 +31,7 @@ import { ref } from "vue";
 
 export default {
   setup() {
+    const router = useRouter();
     const { $supabase } = useNuxtApp();
     const loading = ref(false);
     const email = ref("");
@@ -39,7 +40,7 @@ export default {
     const handleLogin = async () => {
       try {
         loading.value = true;
-        const { error } = await $supabase.auth.signIn({
+        const { error, session, user } = await $supabase.auth.signIn({
           email: email.value,
           password: password.value,
         });
@@ -47,8 +48,8 @@ export default {
       } catch (error) {
         alert(error.error_description || error.message);
       } finally {
-        console.log("success");
         loading.value = false;
+        router.replace("/");
       }
     };
 

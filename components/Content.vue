@@ -7,7 +7,7 @@
       >
         <section>
           <h1 class="text-4xl">{{ content.title }}</h1>
-          <span v-html="$markdown.render(content.data)"></span>
+          <span v-html="content.data"></span>
         </section>
       </li>
       <li
@@ -23,10 +23,7 @@
           <aside class="col-start-3 text-gray-500 text-sm">
             <a :href="content.target_url">{{ content.target_url }}</a>
           </aside>
-          <main
-            class="col-span-2"
-            v-html="$markdown.render(content.data)"
-          ></main>
+          <main class="col-span-2" v-html="content.data"></main>
         </article>
       </li>
     </template>
@@ -34,13 +31,14 @@
 </template>
 
 <script setup lang="ts">
-const { $supabase, $$markdown } = useNuxtApp();
+const { $supabase } = useNuxtApp();
 // const { $markdown } = useNuxtApp();s
-const { data } = await $supabase
-  .from("user_content")
-  .select("title, data, type, target_url")
-  .gt("inserted_at", new Date(Date.now() - 86400000).toISOString()) // Only past 24 hours
-  .order("type", { ascending: false });
+// const { data } = await $supabase
+//   .from("user_content")
+//   .select("title, data, type, target_url")
+//   .gt("inserted_at", new Date(Date.now() - 86400000).toISOString()) // Only past 24 hours
+//   .order("type", { ascending: false });
+const data = await $fetch("/api/get");
 </script>
 
 <style scoped>
