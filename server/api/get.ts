@@ -17,13 +17,15 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
   try {
     const { data } = await supabase
       .from("user_content")
-      .select("title, data, type, target_url")
+      .select("title, data, type, target_url, format")
       .gt("inserted_at", new Date(Date.now() - 86400000).toISOString()) // Only past 24 hours
       .order("type", { ascending: false });
     const dataMarkdown = data.map((el) => {
-      let fEl = el;
-      fEl.data = markdown.render(el.data);
-      return fEl;
+      if (el.format === "text/markdown") {
+        let fEl = el;
+        fEl.data = markdown.render(el.data);
+        return fEl;
+      }
     });
     // res.setHeader("Content-Type", "text/html; charset=UTF-8");
     // return markdown.render(data[1].data);
