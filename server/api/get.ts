@@ -21,7 +21,9 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
       .gt("inserted_at", new Date(Date.now() - 86400000).toISOString()) // Only past 24 hours
       .order("type", { ascending: false });
     const dataMarkdown = data.map((el) => {
-      if (el.format === "text/markdown") {
+      if (el.format === "text/html") {
+        return el;
+      } else {
         let fEl = el;
         fEl.data = markdown.render(el.data);
         return fEl;

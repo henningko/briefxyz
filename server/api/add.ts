@@ -4,18 +4,10 @@ import config from "#config";
 import type { IncomingMessage, ServerResponse } from "http";
 // import { createClient } from "@supabase/supabase-js";
 import supabase from "../lib/supabase";
-import { useCookie, useBody } from "h3";
+import { useBody } from "h3";
 import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
 import sanitizeHtml from "sanitize-html";
-
-// const supabase = createClient(config.supabaseUrl, config.supabaseKey);
-// const markdown = new mdit({
-//   html: true,
-//   linkify: false,
-//   typographer: true,
-//   breaks: true,
-// });
 
 const allowedTags = [
   "address",
@@ -84,7 +76,7 @@ const allowedTags = [
   "tr",
 ];
 export default async (req: IncomingMessage, res: ServerResponse) => {
-  const { url, type, access_token } = await useBody(req);
+  const { url, access_token } = await useBody(req);
   const response = await $fetch(url);
   const doc = new JSDOM(response);
   const reader = new Readability(doc.window.document);
@@ -106,6 +98,7 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
           type: "article",
           user_id: session.user.id,
           format: "text/html",
+          target_url: url,
         },
       ]);
       return { success: "Added successfully" };
