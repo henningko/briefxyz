@@ -6,6 +6,7 @@
 <script setup lang="ts">
 let scrolled = ref(0.0);
 onMounted(() => {
+  // Thanks to https://www.w3schools.com/howto/howto_js_scroll_indicator.asp
   window.addEventListener("scroll", () => {
     const winScroll =
       document.body.scrollTop || document.documentElement.scrollTop;
@@ -23,7 +24,7 @@ onMounted(() => {
   position: sticky;
   top: 0;
   left: 0;
-  @apply bg-black dark:bg-white;
+  @apply bg-cool-gray-500 dark:bg-white;
 }
 .progress > div {
   position: absolute;
