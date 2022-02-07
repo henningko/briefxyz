@@ -1,4 +1,10 @@
 <template>
+  <ScrollProgress />
+  <Html lang="'en-US'">
+    <Head>
+      <Title>Brief</Title>
+    </Head>
+  </Html>
   <NuxtPage />
 </template>
 <script setup lang="ts">
