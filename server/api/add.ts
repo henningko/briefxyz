@@ -76,7 +76,10 @@ const allowedTags = [
   "tr",
 ];
 export default async (req: IncomingMessage, res: ServerResponse) => {
-  const { url, access_token } = await useBody(req);
+  let { url, access_token, priority } = await useBody(req);
+  if (!priority) {
+    priority = 3;
+  }
   const response = await $fetch(url);
   const { origin } = new URL(url);
   const doc = new JSDOM(response, { url: origin });
@@ -92,14 +95,15 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
   }
   if (session.user?.id) {
     try {
-      const { data, error } = await supabase.from("user_content").insert([
+      const { data, error } = await supabase.from("user_content_queue").insert([
         {
           title: article.title,
-          data: clean,
+          content: clean,
           type: "article",
           user_id: session.user.id,
           format: "text/html",
           target_url: url,
+          priority: priority,
         },
       ]);
       return { success: "Added successfully" };

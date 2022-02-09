@@ -7,7 +7,7 @@
       >
         <section>
           <h1>{{ content.title }}</h1>
-          <span v-html="content.data"></span>
+          <span v-html="content.content"></span>
         </section>
       </li>
       <li
@@ -23,7 +23,7 @@
           <aside class="col-start-3 text-gray-500">
             <a :href="content.target_url">{{ content.target_url }}</a>
           </aside>
-          <main class="col-span-2" v-html="content.data"></main>
+          <main class="col-span-2" v-html="content.content"></main>
         </article>
       </li>
     </template>
