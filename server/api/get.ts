@@ -8,6 +8,72 @@ import supabase from "../lib/supabase";
 import { useCookie } from "h3";
 
 // const supabase = createClient(config.supabaseUrl, config.supabaseKey);
+const allowedTags = [
+  "address",
+  "article",
+  "aside",
+  "footer",
+  "header",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "hgroup",
+  "main",
+  "section",
+  "blockquote",
+  "dd",
+  "dl",
+  "dt",
+  "figcaption",
+  "figure",
+  "img",
+  "hr",
+  "li",
+  "main",
+  "ol",
+  "p",
+  "pre",
+  "ul",
+  "a",
+  "abbr",
+  "b",
+  "bdi",
+  "bdo",
+  "br",
+  "cite",
+  "code",
+  "data",
+  "dfn",
+  "em",
+  "i",
+  "kbd",
+  "mark",
+  "q",
+  "s",
+  "samp",
+  "small",
+  "span",
+  "strong",
+  "sub",
+  "sup",
+  "time",
+  "u",
+  "var",
+  "wbr",
+  "caption",
+  "col",
+  "colgroup",
+  "table",
+  "tbody",
+  "td",
+  "tfoot",
+  "th",
+  "thead",
+  "tr",
+];
 const markdown = new mdit({
   html: true,
   linkify: false,
@@ -30,11 +96,13 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     const sanitized = data.map((el) => {
       if (el.format === "text/html") {
         let fEl = el;
-        fEl.content = sanitizeHtml(el.content);
+        fEl.content = sanitizeHtml(el.content, { allowedTags: allowedTags });
         return fEl;
       } else {
         let fEl = el;
-        fEl.content = sanitizeHtml(markdown.render(el.content));
+        fEl.content = sanitizeHtml(markdown.render(el.content), {
+          allowedTags: allowedTags,
+        });
         return fEl;
       }
     });

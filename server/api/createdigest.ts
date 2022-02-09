@@ -13,8 +13,6 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     //why do I have to do this? why doesn't setAuth set the user?
     ({ user: session.user } = await supabase.auth.api.getUser(access_token));
   }
-  console.log(session.user);
-
   // TODO get from user profile
   const speed = 250; // reading speed in wpm
   const length = 30; // reading lengh in minutes
@@ -25,7 +23,6 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     .order("priority", { ascending: true })
     .order("content_length", { ascending: true })
     .is("digest_id", null);
-  console.log(queue);
 
   if (queue.length === 0) {
     return "No new entries available";
@@ -54,33 +51,4 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     }
     return `Created digest ${data[0].id}`;
   }
-
-  // let clean = article.sanitize(article, { FORBID_TAGS: ["div"] });
-  // let session = supabase.auth.session();
-  // if (!session.user?.id) {
-  //   session = supabase.auth.setAuth(access_token);
-  //   //why do I have to do this? why doesn't setAuth set the user?
-  //   ({ user: session.user } = await supabase.auth.api.getUser(access_token));
-  // }
-  // if (session.user?.id) {
-  //   try {
-  //     const { data, error } = await supabase.from("user_content").insert([
-  //       {
-  //         title: article.title,
-  //         data: clean,
-  //         type: "article",
-  //         user_id: session.user.id,
-  //         format: "text/html",
-  //         target_url: url,
-  //       },
-  //     ]);
-  //     return { success: "Added successfully" };
-  //   } catch (error) {
-  //     res.statusCode = 500;
-  //     return error;
-  //   }
-  // } else {
-  //   res.statusCode = 401;
-  //   return "Unauthorized";
-  // }
 };
