@@ -34,6 +34,7 @@
         <article
           class="col-span-3 lg:grid lg:grid-cols-3 grid-flow-row-dense gap-x-16"
           @mouseup="mark"
+          @touchend="mark"
         >
           <h1 class="col-span-3">
             {{ content.title }}
@@ -117,7 +118,6 @@ const textAction = (action, event) => {
 };
 
 const mark = (event) => {
-  console.log(tempWrap);
   const selection = document.getSelection();
   // Only do this if it's not an empty selection
   if (!selection.isCollapsed) {
@@ -155,7 +155,6 @@ const mark = (event) => {
       document.getSelection().removeAllRanges();
     }
   } else {
-    console.log("replacing");
     showMenu.value = false;
     tempWrap.replaceWith(...tempWrap.childNodes);
   }
