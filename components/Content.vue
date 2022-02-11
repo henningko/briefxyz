@@ -1,6 +1,20 @@
 <template>
-  <div>
-    <p v-for="highlight in highlights">{{ highlight.text }}</p>
+  <div
+    class="floatingmenu"
+    v-show="showMenu"
+    :style="{ left: `${x}px`, top: `${y}px` }"
+  >
+    <div>
+      <input
+        placeholder="add comment"
+        type="text"
+        name="comment"
+        id="highlight-comment-input"
+        v-model="inputComment"
+      />
+    </div>
+    <button @click="textAction('highlight', $event)">Highlight</button>
+    <button @click="textAction('todo', $event)">To-Do</button>
   </div>
   <ul class="sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-x-16">
     <template v-for="(content, index) in data" :key="index">
@@ -31,6 +45,28 @@
         </article>
       </li>
     </template>
+    <li class="col-span-2 lg:col-span-3 border-t pt-8 pb-8 border-t-gray-300">
+      <section>
+        <h1>Follow Up Items</h1>
+        <h2>Highlights</h2>
+        <div v-for="highlight in highlights">
+          <blockquote>
+            {{ highlight.text }}
+          </blockquote>
+          {{ highlight.comment }}
+        </div>
+        <h2>To-Dos</h2>
+        <ul class="todolist">
+          <li v-for="toDo in toDos">
+            <strong>{{
+              toDo.comment ? toDo.comment : `${toDo.text.slice(0, 30)}…`
+            }}</strong
+            ><br />
+            {{ toDo.text }}
+          </li>
+        </ul>
+      </section>
+    </li>
   </ul>
 </template>
 
@@ -38,15 +74,55 @@
 const { $supabase } = useNuxtApp();
 const data = await $fetch("/api/get");
 
-let highlights = ref([]);
+const highlights = ref([]);
+const toDos = ref([]);
+
+const showMenu = ref(false);
+const x = ref(0);
+const y = ref(0);
+
+const inputComment = ref("");
+
+let range;
+// This is not an elegant solution—the selection is dropped whenever we focus on the textfield in the floating menu.
+// as a workaround, we create a temp wrapper
+let tempWrap;
+
+const textAction = (action, event) => {
+  let id;
+  if (action === "highlight") {
+    id = `highlight-${highlights.value.length}`;
+    highlights.value.push({
+      id: id,
+      comment: inputComment.value,
+      text: range.toString(),
+    });
+  } else if (action === "todo") {
+    id = `todo-${toDos.value.length}`;
+    toDos.value.push({
+      id: id,
+      comment: inputComment.value,
+      text: range.toString(),
+    });
+  }
+
+  let wrap = document.createElement("mark");
+  wrap.id = id;
+  wrap.classList.add(`mark--${action}`);
+  range.surroundContents(wrap);
+  document.getSelection().removeAllRanges();
+  showMenu.value = false;
+  tempWrap.replaceWith(...tempWrap.childNodes);
+  inputComment.value = "";
+};
 
 const mark = (event) => {
+  console.log(tempWrap);
   const selection = document.getSelection();
   // Only do this if it's not an empty selection
   if (!selection.isCollapsed) {
-    const range = selection.getRangeAt(0);
+    range = selection.getRangeAt(0);
     let isValidSelection = false;
-    console.log(range);
     let startNode = range.startContainer.parentNode;
     let endNode = range.endContainer.parentNode;
     // Check if invalid selection can be made valid through expansion
@@ -66,12 +142,52 @@ const mark = (event) => {
       isValidSelection = true;
     }
     if (isValidSelection) {
-      const id = `highlight-${highlights.value.length}`;
-      let wrap = document.createElement("mark");
-      wrap.id = id;
-      range.surroundContents(wrap);
-      highlights.value.push({ id: id, text: range.toString() });
+      const { x: rectX, y: rectY, width } = range.getBoundingClientRect();
+      x.value = rectX + width / 2 > 180 ? rectX + width / 2 : 180;
+      y.value = rectY + window.scrollY;
+      showMenu.value = true;
+      if (tempWrap) {
+        tempWrap.replaceWith(...tempWrap.childNodes);
+      }
+      tempWrap = document.createElement("mark");
+      tempWrap.classList.add("selection");
+      range.surroundContents(tempWrap);
+      document.getSelection().removeAllRanges();
     }
+  } else {
+    console.log("replacing");
+    showMenu.value = false;
+    tempWrap.replaceWith(...tempWrap.childNodes);
   }
 };
 </script>
+<style scoped>
+.floatingmenu {
+  display: flex;
+  gap: 1px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, calc(-100% - 0.5rem));
+  overflow: hidden;
+  @apply bg-cool-gray-500 shadow-md text-white rounded;
+}
+.floatingmenu button {
+  @apply p-1 pl-2 pr-2 bg-cool-gray-700 hover:bg-cool-gray-500;
+}
+
+.floatingmenu input {
+  @apply bg-cool-gray-700 p-1 pl-2 pr-2;
+}
+
+.todolist li::before {
+  content: "☐";
+  display: inline-block;
+  font-size: 1.5rem;
+  width: 2rem;
+  margin-left: -2rem;
+}
+.todolist li {
+  margin-left: 2rem;
+}
+</style>

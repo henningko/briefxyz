@@ -2,6 +2,15 @@
 a {
   @apply text-black dark:text-white decoration-cool-gray-400 underline underline-offset-2;
 }
+
+mark {
+  background-color: antiquewhite;
+  color: inherit;
+}
+
+mark.selection {
+  background-color: rgba(78, 158, 255, 0.5);
+}
 /* Styling Articles */
 article main {
   @apply lg:pr-4;
@@ -76,7 +85,7 @@ img {
 
 blockquote {
   margin: 0;
-  @apply p-4 md:p-8 border-l-1 border-l-cool-gray-400 bg-cool-gray-100 dark:bg-cool-gray-800;
+  @apply p-4 md:pl-8 md:pr-8 border-l-1 border-l-cool-gray-400 bg-cool-gray-100 dark:bg-cool-gray-800;
 }
 
 figure {
