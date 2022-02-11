@@ -90,7 +90,6 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     const { data } = await supabase
       .from("user_content_queue")
       .select("title, content, type, target_url, format")
-      .gt("inserted_at", new Date(Date.now() - 86400000).toISOString()) // Only past 24 hours
       .order("type", { ascending: false })
       .eq("digest_id", digest[0].id);
     const sanitized = data.map((el) => {
