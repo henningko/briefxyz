@@ -142,7 +142,7 @@ const mark = (event) => {
       isValidSelection = true;
     }
     if (isValidSelection) {
-      const { x: rectX, y: rectY, width } = range.getBoundingClientRect();
+      const { x: rectX, bottom: rectY, width } = range.getBoundingClientRect();
       x.value = rectX + width / 2 > 180 ? rectX + width / 2 : 180;
       y.value = rectY + window.scrollY;
       showMenu.value = true;
@@ -167,7 +167,7 @@ const mark = (event) => {
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(-50%, calc(-100% - 0.5rem));
+  transform: translate(-50%, 0.5rem);
   overflow: hidden;
   @apply bg-cool-gray-500 shadow-md text-white rounded;
 }
