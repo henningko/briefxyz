@@ -14,7 +14,7 @@ mark.selection {
 /* Styling Articles */
 article {
   /* disable menu on user selection */
-  -webkit-touch-callout: none;
+  -webkit-touch-callout: none !important;
 }
 article main {
   @apply lg:pr-4;
