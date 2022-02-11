@@ -4,18 +4,14 @@ a {
 }
 
 mark {
-  background-color: antiquewhite;
   color: inherit;
+  background-color: rgba(234, 78, 255, 0.5);
 }
 
 mark.selection {
   background-color: rgba(78, 158, 255, 0.5);
 }
 /* Styling Articles */
-article {
-  /* disable menu on user selection */
-  -webkit-touch-callout: none !important;
-}
 article main {
   @apply lg:pr-4;
   max-width: 685px;

@@ -51,10 +51,10 @@
         <h1>Follow Up Items</h1>
         <h2>Highlights</h2>
         <div v-for="highlight in highlights">
+          {{ highlight.comment }}
           <blockquote>
             {{ highlight.text }}
           </blockquote>
-          {{ highlight.comment }}
         </div>
         <h2>To-Dos</h2>
         <ul class="todolist">
