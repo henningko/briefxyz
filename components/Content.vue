@@ -6,7 +6,7 @@
   >
     <div>
       <input
-        placeholder="add comment"
+        placeholder="add comment here"
         type="text"
         name="comment"
         id="highlight-comment-input"
@@ -163,20 +163,29 @@ const mark = (event) => {
 <style scoped>
 .floatingmenu {
   display: flex;
+  font-size: 0.825rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   gap: 1px;
   position: absolute;
   top: 0;
   left: 0;
   transform: translate(-50%, 0.5rem);
   overflow: hidden;
-  @apply bg-cool-gray-500 shadow-md text-white rounded;
+  line-height: 2rem;
+  background-color: #585e6f;
+  @apply shadow-md text-white rounded-lg;
 }
 .floatingmenu button {
-  @apply p-1 pl-2 pr-2 bg-cool-gray-700 hover:bg-cool-gray-500;
+  background-color: #262626;
+  @apply pl-4 pr-4 hover:bg-cool-gray-500;
+}
+.floatingmenu input {
+  border-radius: 0;
 }
 
 .floatingmenu input {
-  @apply bg-cool-gray-700 p-1 pl-2 pr-2;
+  background-color: #262626;
+  @apply pl-2 pr-2;
 }
 
 .todolist li::before {
