@@ -173,6 +173,7 @@ const mark = (event) => {
   overflow: hidden;
   line-height: 2rem;
   background-color: #585e6f;
+  white-space: nowrap;
   @apply shadow-md text-white rounded-lg;
 }
 .floatingmenu button {
