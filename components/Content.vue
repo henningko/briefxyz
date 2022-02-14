@@ -49,6 +49,7 @@
     <li class="col-span-2 lg:col-span-3 border-t pt-8 pb-8 border-t-gray-300">
       <section>
         <h1>Follow Up Items</h1>
+        <button @click="copyNotes">copy</button>
         <h2>Highlights</h2>
         <div v-for="highlight in highlights">
           {{ highlight.comment }}
@@ -88,6 +89,31 @@ let range;
 // This is not an elegant solution—the selection is dropped whenever we focus on the textfield in the floating menu.
 // as a workaround, we create a temp wrapper
 let tempWrap;
+
+const copyNotes = () => {
+  var type = "text/html";
+  let htmlOutput = "";
+  highlights.value.map(
+    (el) =>
+      (htmlOutput += `<figure style="margin: 0;""><figcaption>${
+        el.comment ? el.comment : ""
+      }</figcaption><blockquote style="margin: 0; padding-left: 1rem; border-left: 2px solid black;">${
+        el.text
+      }</blockquote></figure><br />`)
+  );
+  htmlOutput += "<ul>";
+  toDos.value.map(
+    (el) =>
+      (htmlOutput += `<li><b>${
+        el.comment ? el.comment : el.text.slice(0, 30)
+      }</b><br />${el.text}</li>`)
+  );
+  htmlOutput += "</ul>";
+  console.log(htmlOutput);
+  var blob = new Blob([htmlOutput], { type });
+  var data = [new ClipboardItem({ [type]: blob })];
+  navigator.clipboard.write(data);
+};
 
 const textAction = (action, event) => {
   let id;
