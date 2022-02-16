@@ -4,15 +4,13 @@
     v-show="showMenu"
     :style="{ left: `${x}px`, top: `${y}px` }"
   >
-    <div>
-      <input
-        placeholder="add comment here"
-        type="text"
-        name="comment"
-        id="highlight-comment-input"
-        v-model="inputComment"
-      />
-    </div>
+    <input
+      placeholder="add comment here"
+      type="text"
+      name="comment"
+      id="highlight-comment-input"
+      v-model="inputComment"
+    />
     <button @click="textAction('highlight', $event)">Highlight</button>
     <button @click="textAction('todo', $event)">To-Do</button>
   </div>
@@ -198,7 +196,11 @@ const mark = (event) => {
     }
     if (isValidSelection) {
       const { x: rectX, bottom: rectY, width } = range.getBoundingClientRect();
-      x.value = rectX + width / 2 > 220 ? rectX + width / 2 : 220;
+      if (window.innerWidth < 400) {
+        x.value = 0;
+      } else {
+        x.value = rectX + width / 2 > 220 ? rectX + width / 2 : 220;
+      }
       y.value = rectY + window.scrollY;
       showMenu.value = true;
       if (tempWrap) {
@@ -229,7 +231,16 @@ const mark = (event) => {
   line-height: 2rem;
   background-color: #585e6f;
   white-space: nowrap;
+  overflow-x: scroll;
   @apply shadow-md text-white rounded-lg;
+}
+@media (max-width: 480px) {
+  .floatingmenu {
+    max-width: calc(100% - 2rem);
+    margin-left: 1rem;
+    margin-right: 1rem;
+    transform: none;
+  }
 }
 .floatingmenu button {
   background-color: #262626;
@@ -240,7 +251,10 @@ const mark = (event) => {
 }
 
 .floatingmenu input {
+  min-width: 6rem;
+  flex-shrink: 1;
   background-color: #262626;
+  font-size: 16px;
   @apply pl-2 pr-2;
 }
 
