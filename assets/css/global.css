@@ -3,6 +3,11 @@ a {
   @apply text-black dark:text-white decoration-cool-gray-400 underline underline-offset-2;
 }
 
+/* Ensure long links don't make page too wide */
+article aside a {
+  line-break: anywhere;
+}
+
 mark {
   color: inherit;
   background-color: rgba(234, 78, 255, 0.5);
