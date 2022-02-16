@@ -50,23 +50,27 @@
       <section>
         <h1>Follow Up Items</h1>
         <button @click="copyNotes">copy</button>
-        <h2>Highlights</h2>
-        <div v-for="highlight in highlights">
-          {{ highlight.comment }}
-          <blockquote>
-            {{ highlight.text }}
-          </blockquote>
+        <div id="copy">
+          <h2>Highlights</h2>
+          <figure v-for="highlight in highlights">
+            <figcaption v-if="highlight.comment">
+              {{ highlight.comment }}
+            </figcaption>
+            <blockquote>
+              {{ highlight.text }}
+            </blockquote>
+          </figure>
+          <h2>To-Dos</h2>
+          <ul class="todolist">
+            <li v-for="toDo in toDos">
+              <strong>{{
+                toDo.comment ? toDo.comment : `${toDo.text.slice(0, 30)}…`
+              }}</strong
+              ><br />
+              {{ toDo.text }}
+            </li>
+          </ul>
         </div>
-        <h2>To-Dos</h2>
-        <ul class="todolist">
-          <li v-for="toDo in toDos">
-            <strong>{{
-              toDo.comment ? toDo.comment : `${toDo.text.slice(0, 30)}…`
-            }}</strong
-            ><br />
-            {{ toDo.text }}
-          </li>
-        </ul>
       </section>
     </li>
   </ul>
@@ -91,28 +95,53 @@ let range;
 let tempWrap;
 
 const copyNotes = () => {
-  var type = "text/html";
-  let htmlOutput = "";
-  highlights.value.map(
-    (el) =>
-      (htmlOutput += `<figure style="margin: 0;""><figcaption>${
-        el.comment ? el.comment : ""
-      }</figcaption><blockquote style="margin: 0; padding-left: 1rem; border-left: 2px solid black;">${
-        el.text
-      }</blockquote></figure><br />`)
-  );
-  htmlOutput += "<ul>";
-  toDos.value.map(
-    (el) =>
-      (htmlOutput += `<li><b>${
-        el.comment ? el.comment : el.text.slice(0, 30)
-      }</b><br />${el.text}</li>`)
-  );
-  htmlOutput += "</ul>";
-  console.log(htmlOutput);
-  var blob = new Blob([htmlOutput], { type });
-  var data = [new ClipboardItem({ [type]: blob })];
-  navigator.clipboard.write(data);
+  let type = "text/html";
+  // let htmlOutput = "";
+  // highlights.value.map(
+  //   (el) =>
+  //     (htmlOutput += `<figure style="margin: 0;""><figcaption>${
+  //       el.comment ? el.comment : ""
+  //     }</figcaption><blockquote style="margin: 0; padding-left: 1rem; border-left: 2px solid black;">${
+  //       el.text
+  //     }</blockquote></figure><br />`)
+  // );
+  // htmlOutput += "<ul>";
+  // toDos.value.map(
+  //   (el) =>
+  //     (htmlOutput += `<li><b>${
+  //       el.comment ? el.comment : el.text.slice(0, 30)
+  //     }</b><br />${el.text}</li>`)
+  // );
+  // htmlOutput += "</ul>";
+  // console.log(htmlOutput);
+  let htmlOutput = document.getElementById("copy");
+  try {
+    let blob = new Blob([htmlOutput.innerHTML], { type });
+    let data = [new ClipboardItem({ [type]: blob })];
+
+    navigator.clipboard.write(data);
+  } catch (error) {
+    if (error instanceof ReferenceError) {
+      //  Try writeText instead (lack of support in FF)
+      let text = "";
+      if (highlights.value.length > 0) {
+        text += "**Highlights**\n\n\n";
+        highlights.value.map(
+          (el) => (text += `>\t"${el.text}" \n\n${el.comment}\n\n`)
+        );
+      }
+      if (toDos.value.length > 0) {
+        text += "\n**To-Dos**\n\n\n";
+        toDos.value.map(
+          (el) =>
+            (text += `*\t${el.comment || el.text.slice(0, 30)} \n\t ${
+              el.text
+            }\n`)
+        );
+      }
+      navigator.clipboard.writeText(text);
+    }
+  }
 };
 
 const textAction = (action, event) => {
