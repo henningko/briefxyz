@@ -169,7 +169,7 @@ const mark = (event) => {
     }
     if (isValidSelection) {
       const { x: rectX, bottom: rectY, width } = range.getBoundingClientRect();
-      x.value = rectX + width / 2 > 180 ? rectX + width / 2 : 180;
+      x.value = rectX + width / 2 > 220 ? rectX + width / 2 : 220;
       y.value = rectY + window.scrollY;
       showMenu.value = true;
       if (tempWrap) {

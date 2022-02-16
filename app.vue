@@ -3,6 +3,7 @@
   <Html lang="'en-US'">
     <Head>
       <Title>Brief</Title>
+      <Meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>
   </Html>
   <NuxtPage />
