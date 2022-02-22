@@ -196,7 +196,7 @@ const mark = (event) => {
     }
     if (isValidSelection) {
       const { x: rectX, bottom: rectY, width } = range.getBoundingClientRect();
-      if (window.innerWidth < 400) {
+      if (window.innerWidth <= 480) {
         x.value = 0;
       } else {
         x.value = rectX + width / 2 > 220 ? rectX + width / 2 : 220;
