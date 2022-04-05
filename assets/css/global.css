@@ -27,7 +27,7 @@ article blockquote > p {
 }
 
 article ul {
-  @apply list-disc list-outside;
+  @apply list-disc list-inside;
 }
 article ul p {
   display: inline;
@@ -185,8 +185,7 @@ b,
 i,
 strong,
 em,
-small,
-code {
+small {
   line-height: 0;
 }
 sub,
