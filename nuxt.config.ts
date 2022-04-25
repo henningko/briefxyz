@@ -1,22 +1,6 @@
-import { defineNuxtConfig } from "nuxt3";
+import { defineNuxtConfig } from 'nuxt'
 
-// https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
+// https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  // modules: ["nuxt3-supabase/module"],
-  buildModules: ["nuxt-windicss"],
-  // supabase: {
-  //   url: process.env.SUPABASE_URL,
-  //   key: process.env.SUPABASE_KEY,
-  // },
-  // For the client side
-  publicRuntimeConfig: {
-    // publicUrl: process.env.PUBLIC_URL,
-    supabaseUrl: process.env.SUPABASE_URL,
-    supabaseKey: process.env.SUPABASE_KEY,
-  },
-  // Server side
-  privateRuntimeConfig: {
-    supabaseUrl: process.env.SUPABASE_URL,
-    supabaseKey: process.env.SUPABASE_KEY,
-  },
-});
+
+})
