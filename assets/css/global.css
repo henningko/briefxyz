@@ -1,121 +1,65 @@
-/* Global styles */
+:root {
+  --root-font-size: 16px;
+  --spacing-m: 0.5rem;
+  --spacing-l: 1rem;
+  --spacing-xl: 2rem;
+  --default-border-radius: 0.5rem;
+  color-scheme: light dark;
+}
+
+/* Set up light color profile */
+@media (prefers-color-scheme: light) {
+  :root {
+    --primary-color: #000000;
+    --secondary-color: #343434;
+    --link-color: #000000;
+    --shadow-color: rgb(146, 146, 146);
+    --background-color: #ffffff;
+    --secondary-background-color: #f5f1e5;
+  }
+}
+
+/* Set up dark color profile */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #ffffff;
+    --secondary-color: #dadada;
+    --link-color: #ffffff;
+    --shadow-color: rgb(131, 131, 131);
+    --background-color: #000000;
+    --secondary-background-color: #202134;
+  }
+}
+
+body {
+  color: var(--primary-color);
+  background-color: var(--background-color);
+  padding: var(--spacing-xl);
+}
+
 a {
-  @apply text-black dark:text-white decoration-cool-gray-400 underline underline-offset-2;
-}
-
-/* Ensure long links don't make page too wide */
-article aside a {
-  line-break: anywhere;
-}
-
-mark {
-  color: inherit;
-  background-color: rgba(234, 78, 255, 0.5);
-}
-
-mark.selection {
-  background-color: rgba(78, 158, 255, 0.5);
-}
-/* Styling Articles */
-article main {
-  @apply lg:pr-4;
-  max-width: 685px;
-}
-
-article blockquote > p {
-  margin-bottom: 0;
-}
-
-article ul {
-  @apply list-disc list-inside;
-}
-article ul p {
-  display: inline;
-}
-
-article hr {
-  margin: calc(2rem - 1px) 6rem 2rem 6rem;
-}
-
-article h1 {
-  font-family: "Hoefler Text";
-  font-style: italic;
-  /* text-transform: capitalize; */
-}
-section h1,
-section .h1,
-article h1,
-article .h1 {
-  font-size: 2.6111111rem;
-  line-height: 4rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-section h2,
-section .h2,
-article h2,
-article .h2 {
-  font-size: 1.6111111rem;
-  line-height: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-article h3,
-article .h3 {
-  font-size: 1rem;
-  line-height: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 0rem;
-}
-article h4,
-article .h4,
-article h5,
-article .h5 {
-  font-size: 1rem;
-  line-height: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 0rem;
-}
-
-article aside {
-  /* margin-top: 1rem; */
-  margin-bottom: 2rem;
-  font-size: 0.875rem;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
+  color: var(--secondary-color);
+  text-decoration: underline var(--shadow-color);
+  text-underline-offset: 2px;
 }
 
 blockquote {
+  background-color: var(--secondary-background-color);
   margin: 0;
-  @apply p-4 md:pl-8 md:pr-8 border-l-1 border-l-cool-gray-400 bg-cool-gray-100 dark:bg-cool-gray-800;
+  padding: var(--spacing-m) var(--spacing-xl);
+  border-left: 3px solid var(--secondary-color);
 }
 
-figure {
-  margin: 2rem 0;
-}
-
-figure figcaption {
-  font-size: 0.875rem;
-}
-
-html,
-body {
-  @apply bg-white dark:bg-black;
-}
-
-/*  Gridlover */
+/* Gridlover */
 /* https://www.gridlover.net/try */
+
 html,
 .root {
-  font-size: 18px;
-  line-height: 36px;
+  font-size: var(--root-font-size);
+  line-height: calc(var(--root-font-size) * 2);
 }
 body,
 .article {
-  font-family: sans-serif;
   font-family: sans-serif;
   font-size: 1rem;
   line-height: 2rem;
@@ -124,21 +68,21 @@ body,
 }
 h1,
 .h1 {
-  font-size: 5rem;
-  line-height: 6rem;
+  font-size: 1.75rem;
+  line-height: 2rem;
   margin-top: 2rem;
   margin-bottom: 4rem;
 }
 h2,
 .h2 {
-  font-size: 1.7777778rem;
+  font-size: 1.4375rem;
   line-height: 2rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
 h3,
 .h3 {
-  font-size: 1.3333333rem;
+  font-size: 1.1875rem;
   line-height: 2rem;
   margin-top: 2rem;
   margin-bottom: 0rem;
@@ -152,7 +96,7 @@ h4,
 }
 h5,
 .h5 {
-  font-size: 1.3333333rem;
+  font-size: 1rem;
   line-height: 2rem;
   margin-top: 2rem;
   margin-bottom: 0rem;
@@ -166,10 +110,10 @@ blockquote {
   margin-top: 0rem;
   margin-bottom: 2rem;
 }
-ul > li > ul,
-ol > li > ol,
-ul > li > ol,
-ol > li > ul {
+ul ul,
+ol ol,
+ul ol,
+ol ul {
   margin-top: 0rem;
   margin-bottom: 0rem;
 }
@@ -180,13 +124,17 @@ hr,
   border: 1px solid;
   margin: -1px 0;
 }
+
 a,
 b,
 i,
 strong,
 em,
-small {
-  line-height: 0;
+small,
+code {
+  /* This causes issues */
+  /* line-height: 0; */
+  line-height: 1em;
 }
 sub,
 sup {
@@ -199,4 +147,45 @@ sup {
 }
 sub {
   bottom: -0.25em;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  border-radius: var(--default-border-radius);
+  padding: var(--spacing-m);
+  border: 1px solid var(--secondary-color);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="email"] {
+  border-radius: var(--default-border-radius);
+  border: 1px solid var(--secondary-color);
+  width: 300px;
+  max-width: 100%;
+}
+
+/* Ensure that forms are stacked */
+form label {
+  display: block;
+}
+
+form input {
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Avoid large spaces when using blockquotes*/
+blockquote > p:last-child {
+  margin-bottom: 0;
 }
