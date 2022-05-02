@@ -1,33 +1,34 @@
 <template>
+  <div
+    class="floatingmenu"
+    v-show="showMarkupMenu"
+    :style="{ left: `${x}px`, top: `${y}px` }"
+  >
+    <input
+      placeholder="add comment here"
+      type="text"
+      name="comment"
+      id="highlight-comment-input"
+      v-model="inputComment"
+    />
+    <button @click="textAction('highlight', $event)">Highlight</button>
+    <button @click="textAction('todo', $event)">To-Do</button>
+  </div>
+  <div
+    class="floatingmenu"
+    v-show="showLinkMenu"
+    :style="{ left: `${x}px`, top: `${y}px` }"
+  >
+    <button @click="textAction('highlight-link', $event)">Highlight</button>
+    <button @click="textAction('add-link', $event)">Add to Reading List</button>
+  </div>
   <div @mouseup="mark" @touchend="mark" @click="checkLink">
-    <div
-      class="floatingmenu"
-      v-show="showMarkupMenu"
-      :style="{ left: `${x}px`, top: `${y}px` }"
-    >
-      <input
-        placeholder="add comment here"
-        type="text"
-        name="comment"
-        id="highlight-comment-input"
-        v-model="inputComment"
-      />
-      <button @click="textAction('highlight', $event)">Highlight</button>
-      <button @click="textAction('todo', $event)">To-Do</button>
-    </div>
-    <div
-      class="floatingmenu"
-      v-show="showLinkMenu"
-      :style="{ left: `${x}px`, top: `${y}px` }"
-    >
-      <button @click="textAction('highlight', $event)">Highlight</button>
-      <button disabled>Add to Reading List</button>
-    </div>
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
+const client = useSupabaseClient();
 const emit = defineEmits(["update:highlights", "update:todos"]);
 const highlights = ref({});
 const toDos = ref({});
@@ -40,51 +41,82 @@ const y = ref(0);
 const inputComment = ref("");
 let range;
 let tempWrap;
+let linkEl;
 
-const textAction = (action, event) => {
-  // Move up the DOM to find the contentId, if it exists
-  let el = range.commonAncestorContainer.parentElement;
+const textAction = async (action, event) => {
   let markContentId;
-  while (el != null && !el.dataset?.contentId) {
-    el = el.parentElement;
+  let el;
+  if (action == "add-link") {
+    const { data: user, error } = await client.functions.invoke("add", {
+      body: JSON.stringify({ url: linkEl.href }),
+    });
   }
-  // set contentId for current markup
-  if (el.dataset?.contentId) {
-    markContentId = el.dataset.contentId;
-  } else {
-    markContentId = "none";
-  }
-  let id;
-  if (action === "highlight") {
-    // If no highlights  exist for content, create new array
+  if (action == "highlight-link") {
+    el = linkEl;
+    console.log(el);
+    while (el != null && !el.dataset?.contentId) {
+      el = el.parentElement;
+    }
+    if (el.dataset?.contentId) {
+      markContentId = el.dataset.contentId;
+    } else {
+      markContentId = "none";
+    }
+    let id;
     highlights["value"][markContentId] =
       highlights["value"][markContentId] || [];
     id = `highlight-${markContentId}-${highlights["value"][markContentId].length}`;
     highlights["value"][markContentId].push({
       id: id,
-      comment: inputComment.value,
-      text: range.toString(),
+      comment: "Highlighted Link",
+      text: linkEl.href,
     });
+    showLinkMenu.value = false;
     emit("update:highlights", highlights);
-    // highlights.value[markContentId] = highlightsArr;
-  } else if (action === "todo") {
-    toDos["value"][markContentId] = toDos["value"][markContentId] || [];
-    id = `todo-${markContentId}-${toDos["value"][markContentId].length}`;
-    toDos["value"][markContentId].push({
-      id: id,
-      comment: inputComment.value,
-      text: range.toString(),
-    });
-    emit("update:todos", toDos);
+  } else {
+    el = range.commonAncestorContainer.parentElement;
+    while (el != null && !el.dataset?.contentId) {
+      el = el.parentElement;
+    }
+    // set contentId for current markup
+    if (el.dataset?.contentId) {
+      markContentId = el.dataset.contentId;
+    } else {
+      markContentId = "none";
+    }
+    let id;
+    if (action === "highlight") {
+      // If no highlights  exist for content, create new array
+      highlights["value"][markContentId] =
+        highlights["value"][markContentId] || [];
+      id = `highlight-${markContentId}-${highlights["value"][markContentId].length}`;
+      highlights["value"][markContentId].push({
+        id: id,
+        comment: inputComment.value ?? "",
+        text: range.toString(),
+      });
+      emit("update:highlights", highlights);
+      // highlights.value[markContentId] = highlightsArr;
+    } else if (action === "todo") {
+      toDos["value"][markContentId] = toDos["value"][markContentId] || [];
+      id = `todo-${markContentId}-${toDos["value"][markContentId].length}`;
+      toDos["value"][markContentId].push({
+        id: id,
+        comment: inputComment.value ?? "",
+        text: range.toString(),
+      });
+      emit("update:todos", toDos);
+    }
+    let wrap = document.createElement("mark");
+    wrap.id = id;
+    wrap.classList.add(`mark--${action}`);
+    range.surroundContents(wrap);
+    document.getSelection().removeAllRanges();
+    tempWrap.replaceWith(...tempWrap.childNodes);
+    showMarkupMenu.value = false;
+    inputComment.value = "";
   }
-  let wrap = document.createElement("mark");
-  wrap.id = id;
-  wrap.classList.add(`mark--${action}`);
-  range.surroundContents(wrap);
-  document.getSelection().removeAllRanges();
-  showMarkupMenu.value = false;
-  tempWrap.replaceWith(...tempWrap.childNodes);
-  inputComment.value = "";
+  // Move up the DOM to find the contentId, if it exists
 };
 
 const mark = (event) => {
@@ -144,6 +176,7 @@ const checkLink = (event) => {
   if (event.target instanceof HTMLAnchorElement) {
     event.preventDefault();
     showLinkMenu.value = true;
+    linkEl = event.target;
     // TODO make this less hacky
     if (event.layerX < 150) {
       x.value = 150;

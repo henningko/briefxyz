@@ -39,7 +39,8 @@ body {
 
 a {
   color: var(--secondary-color);
-  text-decoration: underline var(--shadow-color);
+  text-decoration: underline;
+  text-decoration-color: var(--shadow-color);
   text-underline-offset: 2px;
 }
 

@@ -124,6 +124,8 @@ const contentById = (id) => {
 .content-grid > article {
   border-bottom: 1px solid var(--secondary-color);
   padding: var(--spacing-xl) 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 @media screen and (min-width: 768px) {
   .content-grid {
