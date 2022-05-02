@@ -19,6 +19,7 @@
     v-show="showLinkMenu"
     :style="{ left: `${x}px`, top: `${y}px` }"
   >
+    <div class="floatingmenu__linkpreview">{{ linkHref }}</div>
     <button @click="textAction('highlight-link', $event)">Highlight</button>
     <button @click="textAction('add-link', $event)">Add to Reading List</button>
   </div>
@@ -28,6 +29,8 @@
 </template>
 
 <script setup lang="ts">
+import { link } from "fs";
+
 const client = useSupabaseClient();
 const emit = defineEmits(["update:highlights", "update:todos"]);
 const highlights = ref({});
@@ -39,6 +42,7 @@ const x = ref(0);
 const y = ref(0);
 
 const inputComment = ref("");
+const linkHref = ref("");
 let range;
 let tempWrap;
 let linkEl;
@@ -50,10 +54,13 @@ const textAction = async (action, event) => {
     const { data: user, error } = await client.functions.invoke("add", {
       body: JSON.stringify({ url: linkEl.href }),
     });
+    if (error) {
+      console.error(error);
+    }
+    showLinkMenu.value = false;
   }
   if (action == "highlight-link") {
     el = linkEl;
-    console.log(el);
     while (el != null && !el.dataset?.contentId) {
       el = el.parentElement;
     }
@@ -175,8 +182,9 @@ const mark = (event) => {
 const checkLink = (event) => {
   if (event.target instanceof HTMLAnchorElement) {
     event.preventDefault();
-    showLinkMenu.value = true;
     linkEl = event.target;
+    linkHref.value = linkEl.href;
+    showLinkMenu.value = true;
     // TODO make this less hacky
     if (event.layerX < 150) {
       x.value = 150;
@@ -241,6 +249,13 @@ const checkLink = (event) => {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   /* @apply pl-2 pr-2; */
+}
+.floatingmenu__linkpreview {
+  width: 15rem;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  background-color: rgb(38, 38, 38);
+  padding: 0.25rem 0.5rem;
 }
 </style>
 <style>
