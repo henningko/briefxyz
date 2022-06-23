@@ -26,5 +26,6 @@ header h1 {
   font-size: 3rem;
   line-height: 4rem;
   flex-grow: 2;
+  text-transform: uppercase;
 }
 </style>
