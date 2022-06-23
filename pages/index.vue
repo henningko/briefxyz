@@ -27,6 +27,18 @@
             class="content-container"
             :data-content-id="content.id"
           >
+            <aside class="article__meta">
+              <span v-if="content.target_url"
+                >🌍
+                <a :href="$url(content.target_url).href">{{
+                  $url(content.target_url).hostname.replace("www.", "")
+                }}</a></span
+              >
+              <br />
+              <span v-if="content.published_at"
+                >🗓 {{ $date(content.published_at).toLocaleString() }}</span
+              >
+            </aside>
             <h1>{{ content.title }}</h1>
             <main
               v-html="
@@ -91,7 +103,7 @@ definePageMeta({
   layout: "app",
 });
 const client = useSupabaseClient();
-const { $markdown } = useNuxtApp();
+const { $markdown, $url } = useNuxtApp();
 const markup = reactive({
   highlights: {},
   todos: {},
@@ -108,7 +120,9 @@ const { data: digest } = await client
 // Get data with most recent digest
 const { data } = await client
   .from("user_content_queue")
-  .select("title, content, type, target_url, format, priority, id")
+  .select(
+    "title, content, type, target_url, format, priority, id, published_at"
+  )
   .order("type", { ascending: false })
   .order("priority", { ascending: true })
   .eq("digest_id", digest[0].id);
@@ -126,6 +140,11 @@ const contentById = (id) => {
   padding: var(--spacing-xl) 0;
   overflow-wrap: break-word;
   hyphens: auto;
+}
+article > aside {
+  color: var(--secondary-color);
+  /* find better spot for sizing */
+  font-size: 0.875em;
 }
 @media screen and (min-width: 768px) {
   .content-grid {
@@ -147,5 +166,23 @@ const contentById = (id) => {
     grid-column-start: 1;
     grid-column-end: span 2;
   }
+  article > aside {
+    grid-column-start: 3;
+    grid-row-start: 2;
+  }
 }
+
+/* 
+.floatingmenu
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+.floatingmenu__linkpreview
+  background-color: #262626;
+  overflow-x: hidden;
+  padding: 0.25rem 0.5rem;
+  text-overflow: ellipsis;
+  width: 15rem;
+  grid-column-start: span 2;
+  font-size: 12px;
+  color: var(--shadow-color); */
 </style>
