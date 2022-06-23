@@ -10,6 +10,7 @@
       name="comment"
       id="highlight-comment-input"
       v-model="inputComment"
+      @mousedown.prevent="$event.target.focus()"
     />
     <button @click="textAction('highlight', $event)">Highlight</button>
     <button @click="textAction('todo', $event)">To-Do</button>
@@ -167,7 +168,7 @@ const mark = (event) => {
       tempWrap = document.createElement("mark");
       tempWrap.classList.add("selection");
       range.surroundContents(tempWrap);
-      document.getSelection().removeAllRanges();
+      // document.getSelection().removeAllRanges();
     }
   } else {
     showMarkupMenu.value = false;
