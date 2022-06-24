@@ -51,7 +51,7 @@ a {
 blockquote {
   background-color: var(--secondary-background-color);
   margin: 0;
-  padding: var(--spacing-m) var(--spacing-xl);
+  padding: 0 var(--spacing-xl);
   border-left: 3px solid var(--secondary-color);
 }
 
@@ -130,8 +130,12 @@ ol ul {
 /* Let's make sure all's aligned */
 hr,
 .hr {
-  border: 1px solid;
-  margin: -1px 0;
+  border-top: 1px solid;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: calc(2rem - 1px);
+  margin-bottom: 2rem;
 }
 
 a,
